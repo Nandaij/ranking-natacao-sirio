@@ -51,6 +51,7 @@ function calcStats(aulas, alunoId) {
     if (r.pontualidade) { pontos += 2; pontuais++; }
     if (r.organizacao) pontos += 2;
     if (r.comportamento) pontos += 2;
+    if (r.treinoConcluido) pontos += 2;
     metros += r.metragem || 0;
     for (const d of [25, 50, 100]) {
       const t = r.tempos?.[d];
@@ -134,6 +135,8 @@ export default function App() {
   const [toast, setToast] = useState(null);
   const [frase] = useState(() => FRASES[Math.floor(Math.random() * FRASES.length)]);
   const [animIn, setAnimIn] = useState(false);
+  const [buscaAluno, setBuscaAluno] = useState("");
+  const [buscaAula, setBuscaAula] = useState("");
   const isRemoteUpdate = useRef(false);
 
   // Escuta o Firestore em tempo real: qualquer mudança feita por outro
@@ -208,11 +211,13 @@ export default function App() {
   function initAula() {
     const regs = {}; const temps = {}; const dists = {};
     data.alunos.forEach((a) => {
-      regs[a.id] = { frequencia: false, pontualidade: false, organizacao: false, comportamento: false, metragem: 0 };
+      regs[a.id] = { frequencia: false, pontualidade: false, organizacao: false, comportamento: false, treinoConcluido: false, metragem: 0 };
       temps[a.id] = { 25: "", 50: "", 100: "" };
       dists[a.id] = null;
     });
-    setRegistrosTemp(regs); setTemposTemp(temps); setDistSel(dists); setModo("aula");
+    setRegistrosTemp(regs); setTemposTemp(temps); setDistSel(dists);
+    setBuscaAula("");
+    setModo("aula");
   }
   function salvarAula() {
     const registros = {};
@@ -224,8 +229,68 @@ export default function App() {
     });
     const novaAula = { id: Date.now().toString(), data: aulaData, registros };
     setData((d) => ({ ...d, aulas: [...d.aulas, novaAula] }));
+    setBuscaAula("");
     setModo("professor");
     showToast("Aula salva com sucesso! 💾");
+  }
+
+  function imprimirRanking() {
+    const turmaLabel = data.turma === "AP2" ? "Aperfeiçoamento 2" : "Aperfeiçoamento 3";
+    const dataHoje = new Date().toLocaleDateString("pt-BR");
+    const linhas = ranking.map((aluno, i) => {
+      const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}º`;
+      const badges = BADGES_DEF.filter((b) => b.check(aluno)).map(b => b.icon).join(" ");
+      return `
+        <tr style="border-bottom:1px solid #f3f4f6;">
+          <td style="padding:10px 8px;text-align:center;font-size:20px;">${medal}</td>
+          <td style="padding:10px 8px;font-weight:700;color:#1f2937;font-size:15px;">${aluno.nome} <span style="font-size:14px;">${badges}</span></td>
+          <td style="padding:10px 8px;text-align:center;font-weight:800;color:#CC2200;font-size:16px;">${aluno.pontos}</td>
+          <td style="padding:10px 8px;text-align:center;color:#374151;font-size:14px;">${aluno.metros.toLocaleString("pt-BR")}m</td>
+          <td style="padding:10px 8px;text-align:center;color:#374151;font-size:13px;">${aluno.presencas}/${data.aulas.length}</td>
+        </tr>`;
+    }).join("");
+
+    const html = `
+      <!DOCTYPE html>
+      <html lang="pt-BR">
+      <head>
+        <meta charset="UTF-8"/>
+        <title>Ranking Natação - EC Sírio</title>
+        <style>
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { font-family: Arial, sans-serif; padding: 24px; color: #1f2937; }
+          @media print { body { padding: 12px; } .no-print { display: none; } }
+        </style>
+      </head>
+      <body>
+        <div style="text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:3px solid #CC2200;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#CC2200;font-weight:700;">Esporte Clube Sírio</div>
+          <div style="font-size:22px;font-weight:900;margin:4px 0;">🏆 Ranking — ${turmaLabel}</div>
+          <div style="font-size:12px;color:#9ca3af;">${data.aulas.length} aulas registradas · Atualizado em ${dataHoje}</div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="background:#CC2200;color:white;">
+              <th style="padding:10px 8px;text-align:center;font-size:13px;">#</th>
+              <th style="padding:10px 8px;text-align:left;font-size:13px;">Aluno</th>
+              <th style="padding:10px 8px;text-align:center;font-size:13px;">Pontos</th>
+              <th style="padding:10px 8px;text-align:center;font-size:13px;">Metragem</th>
+              <th style="padding:10px 8px;text-align:center;font-size:13px;">Presenças</th>
+            </tr>
+          </thead>
+          <tbody>${linhas}</tbody>
+        </table>
+        <div style="margin-top:20px;text-align:center;font-size:11px;color:#d1d5db;">Esporte Clube Sírio · Natação · ${turmaLabel}</div>
+        <div class="no-print" style="margin-top:24px;text-align:center;">
+          <button onclick="window.print()" style="background:#CC2200;color:white;border:none;padding:12px 32px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;">🖨️ Imprimir</button>
+        </div>
+      </body>
+      </html>`;
+
+    const win = window.open("", "_blank");
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => win.print(), 500);
   }
 
   return (
@@ -303,14 +368,34 @@ export default function App() {
                   className="flex-1 rounded-xl px-3 py-2 text-sm border border-gray-300 outline-none focus:border-red-500 bg-gray-50" />
                 <button onClick={addAluno} className="text-white px-4 py-2 rounded-xl text-sm font-bold" style={{ background: "#CC2200" }}>+ Adicionar</button>
               </div>
+              {/* Campo de busca */}
+              {data.alunos.length > 3 && (
+                <div className="relative mb-3">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔍</span>
+                  <input
+                    value={buscaAluno}
+                    onChange={(e) => setBuscaAluno(e.target.value)}
+                    placeholder="Buscar aluno..."
+                    className="w-full rounded-xl pl-8 pr-3 py-2 text-sm border border-gray-200 outline-none focus:border-red-400 bg-gray-50"
+                  />
+                  {buscaAluno && (
+                    <button onClick={() => setBuscaAluno("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500 text-xs">✕</button>
+                  )}
+                </div>
+              )}
               <div className="space-y-2 max-h-48 overflow-y-auto">
                 {data.alunos.length === 0 && <p className="text-gray-400 text-sm text-center py-2">Nenhum aluno cadastrado</p>}
-                {data.alunos.map((a) => (
+                {data.alunos
+                  .filter((a) => a.nome.toLowerCase().includes(buscaAluno.toLowerCase()))
+                  .map((a) => (
                   <div key={a.id} className="flex items-center justify-between bg-gray-50 rounded-xl px-3 py-2 border border-gray-100">
                     <span className="text-gray-800 text-sm">{a.nome}</span>
                     <button onClick={() => removeAluno(a.id)} className="text-red-400 hover:text-red-600 text-xs">✕</button>
                   </div>
                 ))}
+                {data.alunos.length > 0 && data.alunos.filter((a) => a.nome.toLowerCase().includes(buscaAluno.toLowerCase())).length === 0 && (
+                  <p className="text-gray-400 text-sm text-center py-2">Nenhum aluno encontrado</p>
+                )}
               </div>
             </div>
             <button onClick={initAula} disabled={data.alunos.length === 0}
@@ -353,17 +438,32 @@ export default function App() {
               <input type="date" value={aulaData} onChange={(e) => setAulaData(e.target.value)}
                 className="bg-gray-50 text-gray-800 rounded-lg px-2 py-1 text-sm border border-gray-300 outline-none" />
             </div>
-            {data.alunos.map((aluno) => {
+            {/* Busca rápida na aula */}
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔍</span>
+              <input
+                value={buscaAula}
+                onChange={(e) => setBuscaAula(e.target.value)}
+                placeholder="Buscar aluno na aula..."
+                className="w-full bg-white rounded-xl pl-8 pr-3 py-2 text-sm border border-gray-200 outline-none focus:border-red-400 shadow"
+              />
+              {buscaAula && (
+                <button onClick={() => setBuscaAula("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500 text-xs">✕</button>
+              )}
+            </div>
+            {data.alunos
+              .filter((aluno) => aluno.nome.toLowerCase().includes(buscaAula.toLowerCase()))
+              .map((aluno) => {
               const r = registrosTemp[aluno.id] || {};
               const t = temposTemp[aluno.id] || {};
               const d = distSel[aluno.id];
-              const pts = (r.frequencia ? 2 : 0) + (r.pontualidade ? 2 : 0) + (r.organizacao ? 2 : 0) + (r.comportamento ? 2 : 0);
+              const pts = (r.frequencia ? 2 : 0) + (r.pontualidade ? 2 : 0) + (r.organizacao ? 2 : 0) + (r.comportamento ? 2 : 0) + (r.treinoConcluido ? 2 : 0);
               return (
                 <div key={aluno.id} className="bg-white rounded-2xl p-4 shadow border border-red-100">
                   <div className="flex items-center justify-between mb-3">
                     <span className="font-bold text-gray-800">{aluno.nome}</span>
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${pts >= 6 ? "bg-green-100 text-green-700" : pts > 0 ? "bg-red-50 text-red-600" : "bg-gray-100 text-gray-400"}`}>
-                      {pts} pts hoje
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${pts >= 8 ? "bg-green-100 text-green-700" : pts > 0 ? "bg-red-50 text-red-600" : "bg-gray-100 text-gray-400"}`}>
+                      {pts}/10 pts hoje
                     </span>
                   </div>
                   <div className="grid grid-cols-2 gap-2 mb-3">
@@ -372,6 +472,7 @@ export default function App() {
                       { key: "pontualidade", label: "⏰ Pontualidade" },
                       { key: "organizacao", label: "🎒 Organização" },
                       { key: "comportamento", label: "😊 Comportamento" },
+                      { key: "treinoConcluido", label: "🏁 Treino Concluído" },
                     ].map(({ key, label }) => (
                       <Toggle key={key} checked={!!r[key]} label={label}
                         onChange={(v) => setRegistrosTemp((prev) => ({ ...prev, [aluno.id]: { ...prev[aluno.id], [key]: v } }))} />
@@ -427,7 +528,7 @@ export default function App() {
             </div>
 
             {/* Título */}
-            <div className="text-center py-2 bg-white rounded-2xl shadow border border-red-100">
+            <div className="text-center py-3 bg-white rounded-2xl shadow border border-red-100">
               <div className="flex justify-center mb-1">
                 <EscudoSirio size={28} />
               </div>
@@ -435,7 +536,15 @@ export default function App() {
                 {data.turma === "AP2" ? "Aperfeiçoamento 2" : "Aperfeiçoamento 3"}
               </div>
               <div className="text-gray-800 text-xl font-extrabold">🏆 Ranking da Turma</div>
-              <div className="text-gray-400 text-xs mt-0.5">{data.aulas.length} aulas registradas</div>
+              <div className="text-gray-400 text-xs mt-0.5 mb-3">{data.aulas.length} aulas registradas</div>
+              {ranking.length > 0 && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); imprimirRanking(); }}
+                  className="inline-flex items-center gap-2 text-white text-sm font-bold px-4 py-2 rounded-xl shadow transition-colors"
+                  style={{ background: "#CC2200" }}>
+                  🖨️ Imprimir Ranking
+                </button>
+              )}
             </div>
 
             {ranking.length === 0 && (
@@ -458,6 +567,7 @@ export default function App() {
                 pontualidade: lastReg?.pontualidade ? 2 : 0,
                 organizacao: lastReg?.organizacao ? 2 : 0,
                 comportamento: lastReg?.comportamento ? 2 : 0,
+                treinoConcluido: lastReg?.treinoConcluido ? 2 : 0,
               };
 
               return (
@@ -521,6 +631,7 @@ export default function App() {
                               { key: "pontualidade", label: "Pontualidade" },
                               { key: "organizacao", label: "Organização" },
                               { key: "comportamento", label: "Comportamento" },
+                              { key: "treinoConcluido", label: "Treino Concluído" },
                             ].map(({ key, label }) => (
                               <div key={key} className="bg-gray-50 rounded-xl p-2.5 border border-gray-100">
                                 <div className="text-gray-500 text-xs mb-1">{label}</div>
@@ -628,3 +739,4 @@ export default function App() {
     </div>
   );
 }
+
