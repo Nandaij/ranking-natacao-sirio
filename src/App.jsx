@@ -7,34 +7,34 @@ const LOGO_SIRIO = logoSirio;
 
 const SENHA = "sirio123";
 const FRASES = [
-  "A Ã¡gua Ã© o seu palco. Brilhe! ðŸŒŠ",
-  "Cada braÃ§ada te deixa mais forte ðŸ’ª",
-  "CampeÃµes sÃ£o feitos de treino e dedicaÃ§Ã£o ðŸ†",
-  "A piscina Ã© onde herÃ³is nascem ðŸ¦¸",
-  "Supere seus limites a cada aula! âš¡",
-  "PersistÃªncia transforma Ã¡gua em vitÃ³ria ðŸ¥‡",
-  "Seu esforÃ§o de hoje Ã© sua medalha de amanhÃ£ ðŸŽ–ï¸",
-  "Nade com o coraÃ§Ã£o, venÃ§a com a mente ðŸ§ ",
+  "A água é o seu palco. Brilhe! 🌊",
+  "Cada braçada te deixa mais forte 💪",
+  "Campeões são feitos de treino e dedicação 🏆",
+  "A piscina é onde heróis nascem 🦸",
+  "Supere seus limites a cada aula! ⚡",
+  "Persistência transforma água em vitória 🥇",
+  "Seu esforço de hoje é sua medalha de amanhã 🎖️",
+  "Nade com o coração, vença com a mente 🧠",
 ];
 
 const BADGES_DEF = [
-  { id: "presenca_perfeita", icon: "ðŸ”¥", label: "PresenÃ§a Perfeita", desc: "5 aulas seguidas", check: (s) => s.streak >= 5 },
-  { id: "velocista", icon: "âš¡", label: "Velocista", desc: "Menos de 20s nos 25m", check: (s) => s.best[25] && s.best[25] < 20 },
-  { id: "maratonista", icon: "ðŸŒŠ", label: "Maratonista", desc: "1.000m acumulados", check: (s) => s.metros >= 1000 },
-  { id: "centuriao", icon: "ðŸ’¯", label: "CenturiÃ£o", desc: "100 pontos acumulados", check: (s) => s.pontos >= 100 },
-  { id: "primeiro_tempo", icon: "â±ï¸", label: "Cronometrado", desc: "Primeiro tempo registrado", check: (s) => s.best[25] || s.best[50] || s.best[100] },
-  { id: "dedicado", icon: "ðŸŽ¯", label: "Dedicado", desc: "10 aulas frequentadas", check: (s) => s.presencas >= 10 },
-  { id: "super_nadador", icon: "ðŸ¦ˆ", label: "TubarÃ£o", desc: "5.000m acumulados", check: (s) => s.metros >= 5000 },
-  { id: "pontual", icon: "â°", label: "Sempre Pontual", desc: "5 presenÃ§as pontuais", check: (s) => s.pontuais >= 5 },
+  { id: "presenca_perfeita", icon: "🔥", label: "Presença Perfeita", desc: "5 aulas seguidas", check: (s) => s.streak >= 5 },
+  { id: "velocista", icon: "⚡", label: "Velocista", desc: "Menos de 20s nos 25m", check: (s) => s.best[25] && s.best[25] < 20 },
+  { id: "maratonista", icon: "🌊", label: "Maratonista", desc: "1.000m acumulados", check: (s) => s.metros >= 1000 },
+  { id: "centuriao", icon: "💯", label: "Centurião", desc: "100 pontos acumulados", check: (s) => s.pontos >= 100 },
+  { id: "primeiro_tempo", icon: "⏱️", label: "Cronometrado", desc: "Primeiro tempo registrado", check: (s) => s.best[25] || s.best[50] || s.best[100] },
+  { id: "dedicado", icon: "🎯", label: "Dedicado", desc: "10 aulas frequentadas", check: (s) => s.presencas >= 10 },
+  { id: "super_nadador", icon: "🦈", label: "Tubarão", desc: "5.000m acumulados", check: (s) => s.metros >= 5000 },
+  { id: "pontual", icon: "⏰", label: "Sempre Pontual", desc: "5 presenças pontuais", check: (s) => s.pontuais >= 5 },
 ];
 
 const defaultState = { turma: "AP2", alunos: [], aulas: [] };
 
 function getMedal(r) {
-  if (r === 1) return { icon: "ðŸ¥‡", color: "from-yellow-500 to-amber-400", border: "border-yellow-400", text: "text-yellow-600" };
-  if (r === 2) return { icon: "ðŸ¥ˆ", color: "from-slate-400 to-slate-300", border: "border-slate-400", text: "text-slate-500" };
-  if (r === 3) return { icon: "ðŸ¥‰", color: "from-amber-700 to-amber-600", border: "border-amber-600", text: "text-amber-700" };
-  return { icon: `${r}Âº`, color: "from-red-800 to-red-700", border: "border-red-200", text: "text-red-700" };
+  if (r === 1) return { icon: "🥇", color: "from-yellow-500 to-amber-400", border: "border-yellow-400", text: "text-yellow-600" };
+  if (r === 2) return { icon: "🥈", color: "from-slate-400 to-slate-300", border: "border-slate-400", text: "text-slate-500" };
+  if (r === 3) return { icon: "🥉", color: "from-amber-700 to-amber-600", border: "border-amber-600", text: "text-amber-700" };
+  return { icon: `${r}º`, color: "from-red-800 to-red-700", border: "border-red-200", text: "text-red-700" };
 }
 
 function calcStats(aulas, alunoId) {
@@ -64,7 +64,7 @@ function calcStats(aulas, alunoId) {
 }
 
 function formatTempo(s) {
-  if (!s) return "â€”";
+  if (!s) return "—";
   const m = Math.floor(s / 60);
   const sec = (s % 60).toFixed(2).padStart(5, "0");
   return m > 0 ? `${m}:${sec}` : `${sec}s`;
@@ -74,7 +74,7 @@ function EscudoSirio({ size = 32, white = false }) {
   return (
     <img
       src={LOGO_SIRIO}
-      alt="Esporte Clube SÃ­rio"
+      alt="Esporte Clube Sírio"
       width={size}
       style={{ 
         height: "auto", 
@@ -112,7 +112,7 @@ function StarRow({ value, max = 2 }) {
   return (
     <div className="flex gap-0.5">
       {Array.from({ length: max }).map((_, i) => (
-        <span key={i} className={`text-base ${i < value ? "text-yellow-500" : "text-gray-300"}`}>â˜…</span>
+        <span key={i} className={`text-base ${i < value ? "text-yellow-500" : "text-gray-300"}`}>★</span>
       ))}
     </div>
   );
@@ -139,7 +139,7 @@ export default function App() {
   const [buscaAula, setBuscaAula] = useState("");
   const isRemoteUpdate = useRef(false);
 
-  // Escuta o Firestore em tempo real: qualquer mudanÃ§a feita por outro
+  // Escuta o Firestore em tempo real: qualquer mudança feita por outro
   // professor/aparelho chega aqui automaticamente.
   useEffect(() => {
     const unsubscribe = subscribeToData((remoteData, error) => {
@@ -156,8 +156,8 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // Sempre que o estado local mudar (por uma aÃ§Ã£o do usuÃ¡rio local),
-  // envia para o Firestore â€” exceto quando a mudanÃ§a veio do prÃ³prio listener.
+  // Sempre que o estado local mudar (por uma ação do usuário local),
+  // envia para o Firestore — exceto quando a mudança veio do próprio listener.
   useEffect(() => {
     if (!data) return;
     if (isRemoteUpdate.current) {
@@ -181,9 +181,9 @@ export default function App() {
   if (syncError) return (
     <div className="min-h-screen flex items-center justify-center p-6" style={{ background: "#CC2200" }}>
       <div className="bg-white rounded-2xl p-6 max-w-sm text-center shadow-xl">
-        <div className="text-4xl mb-3">âš ï¸</div>
-        <h2 className="font-bold text-gray-800 mb-2">NÃ£o foi possÃ­vel conectar</h2>
-        <p className="text-gray-500 text-sm">Verifique sua conexÃ£o com a internet e atualize a pÃ¡gina. Se o problema continuar, confira as regras do Firestore.</p>
+        <div className="text-4xl mb-3">⚠️</div>
+        <h2 className="font-bold text-gray-800 mb-2">Não foi possível conectar</h2>
+        <p className="text-gray-500 text-sm">Verifique sua conexão com a internet e atualize a página. Se o problema continuar, confira as regras do Firestore.</p>
       </div>
     </div>
   );
@@ -202,7 +202,7 @@ export default function App() {
     const novo = { id: Date.now().toString(), nome: novoNome.trim() };
     setData((d) => ({ ...d, alunos: [...d.alunos, novo] }));
     setNovoNome("");
-    showToast(`${novo.nome} adicionado! ðŸŽ‰`);
+    showToast(`${novo.nome} adicionado! 🎉`);
   }
   function removeAluno(id) {
     if (!confirm("Remover este aluno?")) return;
@@ -231,14 +231,14 @@ export default function App() {
     setData((d) => ({ ...d, aulas: [...d.aulas, novaAula] }));
     setBuscaAula("");
     setModo("professor");
-    showToast("Aula salva com sucesso! ðŸ’¾");
+    showToast("Aula salva com sucesso! 💾");
   }
 
   function imprimirRanking() {
-    const turmaLabel = data.turma === "AP2" ? "AperfeiÃ§oamento 2" : "AperfeiÃ§oamento 3";
+    const turmaLabel = data.turma === "AP2" ? "Aperfeiçoamento 2" : "Aperfeiçoamento 3";
     const dataHoje = new Date().toLocaleDateString("pt-BR");
     const linhas = ranking.map((aluno, i) => {
-      const medal = i === 0 ? "ðŸ¥‡" : i === 1 ? "ðŸ¥ˆ" : i === 2 ? "ðŸ¥‰" : `${i + 1}Âº`;
+      const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}º`;
       const badges = BADGES_DEF.filter((b) => b.check(aluno)).map(b => b.icon).join(" ");
       return `
         <tr style="border-bottom:1px solid #f3f4f6;">
@@ -255,7 +255,7 @@ export default function App() {
       <html lang="pt-BR">
       <head>
         <meta charset="UTF-8"/>
-        <title>Ranking NataÃ§Ã£o - EC SÃ­rio</title>
+        <title>Ranking Natação - EC Sírio</title>
         <style>
           * { box-sizing: border-box; margin: 0; padding: 0; }
           body { font-family: Arial, sans-serif; padding: 24px; color: #1f2937; }
@@ -264,9 +264,9 @@ export default function App() {
       </head>
       <body>
         <div style="text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:3px solid #CC2200;">
-          <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#CC2200;font-weight:700;">Esporte Clube SÃ­rio</div>
-          <div style="font-size:22px;font-weight:900;margin:4px 0;">ðŸ† Ranking â€” ${turmaLabel}</div>
-          <div style="font-size:12px;color:#9ca3af;">${data.aulas.length} aulas registradas Â· Atualizado em ${dataHoje}</div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#CC2200;font-weight:700;">Esporte Clube Sírio</div>
+          <div style="font-size:22px;font-weight:900;margin:4px 0;">🏆 Ranking — ${turmaLabel}</div>
+          <div style="font-size:12px;color:#9ca3af;">${data.aulas.length} aulas registradas · Atualizado em ${dataHoje}</div>
         </div>
         <table style="width:100%;border-collapse:collapse;">
           <thead>
@@ -275,14 +275,14 @@ export default function App() {
               <th style="padding:10px 8px;text-align:left;font-size:13px;">Aluno</th>
               <th style="padding:10px 8px;text-align:center;font-size:13px;">Pontos</th>
               <th style="padding:10px 8px;text-align:center;font-size:13px;">Metragem</th>
-              <th style="padding:10px 8px;text-align:center;font-size:13px;">PresenÃ§as</th>
+              <th style="padding:10px 8px;text-align:center;font-size:13px;">Presenças</th>
             </tr>
           </thead>
           <tbody>${linhas}</tbody>
         </table>
-        <div style="margin-top:20px;text-align:center;font-size:11px;color:#d1d5db;">Esporte Clube SÃ­rio Â· NataÃ§Ã£o Â· ${turmaLabel}</div>
+        <div style="margin-top:20px;text-align:center;font-size:11px;color:#d1d5db;">Esporte Clube Sírio · Natação · ${turmaLabel}</div>
         <div class="no-print" style="margin-top:24px;text-align:center;">
-          <button onclick="window.print()" style="background:#CC2200;color:white;border:none;padding:12px 32px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;">ðŸ–¨ï¸ Imprimir</button>
+          <button onclick="window.print()" style="background:#CC2200;color:white;border:none;padding:12px 32px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;">🖨️ Imprimir</button>
         </div>
       </body>
       </html>`;
@@ -294,7 +294,7 @@ export default function App() {
   }
 
   function imprimirFichaAvaliacao() {
-    const turmaLabel = data.turma === "AP2" ? "AperfeiÃ§oamento 2" : "AperfeiÃ§oamento 3";
+    const turmaLabel = data.turma === "AP2" ? "Aperfeiçoamento 2" : "Aperfeiçoamento 3";
     const alunosOrdenados = [...data.alunos].sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
     const linhas = alunosOrdenados.map((aluno) => `
         <tr>
@@ -313,7 +313,7 @@ export default function App() {
       <html lang="pt-BR">
       <head>
         <meta charset="UTF-8"/>
-        <title>Ficha de AvaliaÃ§Ã£o - EC SÃ­rio</title>
+        <title>Ficha de Avaliação - EC Sírio</title>
         <style>
           * { box-sizing: border-box; margin: 0; padding: 0; }
           body { font-family: Arial, sans-serif; padding: 20px; color: #1f2937; }
@@ -322,28 +322,28 @@ export default function App() {
       </head>
       <body>
         <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #CC2200;">
-          <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#CC2200;font-weight:700;">Esporte Clube SÃ­rio</div>
-          <div style="font-size:20px;font-weight:900;margin:4px 0;">ðŸ“‹ Ficha de AvaliaÃ§Ã£o â€” ${turmaLabel}</div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#CC2200;font-weight:700;">Esporte Clube Sírio</div>
+          <div style="font-size:20px;font-weight:900;margin:4px 0;">📋 Ficha de Avaliação — ${turmaLabel}</div>
           <div style="font-size:12px;color:#9ca3af;">Data: ______ / ______ / __________</div>
         </div>
         <table style="width:100%;border-collapse:collapse;">
           <thead>
             <tr style="background:#CC2200;color:white;">
               <th style="padding:8px 6px;text-align:left;font-size:11px;">Aluno</th>
-              <th style="padding:8px 6px;text-align:center;font-size:10px;">âœ…<br/>FrequÃªncia</th>
-              <th style="padding:8px 6px;text-align:center;font-size:10px;">â°<br/>Pontualidade</th>
-              <th style="padding:8px 6px;text-align:center;font-size:10px;">ðŸŽ’<br/>OrganizaÃ§Ã£o</th>
-              <th style="padding:8px 6px;text-align:center;font-size:10px;">ðŸ˜Š<br/>Comportamento</th>
-              <th style="padding:8px 6px;text-align:center;font-size:10px;">ðŸ<br/>Treino Concl.</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;">✅<br/>Frequência</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;">⏰<br/>Pontualidade</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;">🎒<br/>Organização</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;">😊<br/>Comportamento</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;">🏁<br/>Treino Concl.</th>
               <th style="padding:8px 6px;text-align:center;font-size:10px;">Metragem</th>
               <th style="padding:8px 6px;text-align:center;font-size:10px;">Tempos (seg)</th>
             </tr>
           </thead>
           <tbody>${linhas}</tbody>
         </table>
-        <div style="margin-top:16px;font-size:11px;color:#9ca3af;">Cada critÃ©rio marcado = 2 pontos. Preencher no app depois da aula.</div>
+        <div style="margin-top:16px;font-size:11px;color:#9ca3af;">Cada critério marcado = 2 pontos. Preencher no app depois da aula.</div>
         <div class="no-print" style="margin-top:24px;text-align:center;">
-          <button onclick="window.print()" style="background:#CC2200;color:white;border:none;padding:12px 32px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;">ðŸ–¨ï¸ Imprimir</button>
+          <button onclick="window.print()" style="background:#CC2200;color:white;border:none;padding:12px 32px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;">🖨️ Imprimir</button>
         </div>
       </body>
       </html>`;
@@ -362,17 +362,17 @@ export default function App() {
         </div>
       )}
 
-      {/* HEADER - vermelho SÃ­rio */}
+      {/* HEADER - vermelho Sírio */}
       <header className="sticky top-0 z-40 shadow-lg" style={{ background: "#CC2200" }}>
         {/* Banner com logos */}
         <div className="flex items-center justify-between px-4 pt-3 pb-2">
           <div className="flex items-center gap-2">
             <EscudoSirio size={36} white />
             <div>
-              <div className="text-white font-extrabold text-base leading-tight tracking-wide">ESPORTE CLUBE SÃRIO</div>
+              <div className="text-white font-extrabold text-base leading-tight tracking-wide">ESPORTE CLUBE SÍRIO</div>
               <div className="flex items-center gap-1.5">
                 <IconNadador size={22} color="rgba(255,255,255,0.85)" />
-                <span className="text-white/80 text-xs font-semibold tracking-widest uppercase">NataÃ§Ã£o</span>
+                <span className="text-white/80 text-xs font-semibold tracking-widest uppercase">Natação</span>
               </div>
             </div>
           </div>
@@ -380,8 +380,8 @@ export default function App() {
             <select value={data.turma} onChange={(e) => setData((d) => ({ ...d, turma: e.target.value }))}
               className="text-xs rounded-lg px-2 py-1.5 border border-white/30 outline-none font-bold"
               style={{ background: "rgba(255,255,255,0.15)", color: "#fff" }}>
-              <option value="AP2" style={{ color: "#333" }}>AperfeiÃ§. 2</option>
-              <option value="AP3" style={{ color: "#333" }}>AperfeiÃ§. 3</option>
+              <option value="AP2" style={{ color: "#333" }}>Aperfeiç. 2</option>
+              <option value="AP3" style={{ color: "#333" }}>Aperfeiç. 3</option>
             </select>
             {modo === "ranking"
               ? <button onClick={() => setModo("login")} className="text-xs px-3 py-1.5 rounded-lg font-bold border border-white/30 text-white" style={{ background: "rgba(255,255,255,0.15)" }}>Professor</button>
@@ -421,7 +421,7 @@ export default function App() {
         {modo === "professor" && senhaOk && (
           <div className="space-y-4">
             <div className="bg-white rounded-2xl p-4 shadow border border-red-100">
-              <h2 className="font-bold mb-3 text-gray-800">ðŸ‘¥ Gerenciar Alunos</h2>
+              <h2 className="font-bold mb-3 text-gray-800">👥 Gerenciar Alunos</h2>
               <div className="flex gap-2 mb-3">
                 <input value={novoNome} onChange={(e) => setNovoNome(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addAluno()}
@@ -432,7 +432,7 @@ export default function App() {
               {/* Campo de busca */}
               {data.alunos.length > 3 && (
                 <div className="relative mb-3">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">ðŸ”</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔍</span>
                   <input
                     value={buscaAluno}
                     onChange={(e) => setBuscaAluno(e.target.value)}
@@ -440,7 +440,7 @@ export default function App() {
                     className="w-full rounded-xl pl-8 pr-3 py-2 text-sm border border-gray-200 outline-none focus:border-red-400 bg-gray-50"
                   />
                   {buscaAluno && (
-                    <button onClick={() => setBuscaAluno("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500 text-xs">âœ•</button>
+                    <button onClick={() => setBuscaAluno("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500 text-xs">✕</button>
                   )}
                 </div>
               )}
@@ -451,7 +451,7 @@ export default function App() {
                   .map((a) => (
                   <div key={a.id} className="flex items-center justify-between bg-gray-50 rounded-xl px-3 py-2 border border-gray-100">
                     <span className="text-gray-800 text-sm">{a.nome}</span>
-                    <button onClick={() => removeAluno(a.id)} className="text-red-400 hover:text-red-600 text-xs">âœ•</button>
+                    <button onClick={() => removeAluno(a.id)} className="text-red-400 hover:text-red-600 text-xs">✕</button>
                   </div>
                 ))}
                 {data.alunos.length > 0 && data.alunos.filter((a) => a.nome.toLowerCase().includes(buscaAluno.toLowerCase())).length === 0 && (
@@ -462,11 +462,11 @@ export default function App() {
             <button onClick={initAula} disabled={data.alunos.length === 0}
               className="w-full text-white font-bold py-3 rounded-2xl disabled:opacity-40 transition-colors shadow"
               style={{ background: "#CC2200" }}>
-              ðŸ“‹ Registrar Nova Aula
+              📋 Registrar Nova Aula
             </button>
             {data.aulas.length > 0 && (
               <div className="bg-white rounded-2xl p-4 shadow border border-red-100">
-                <h3 className="font-bold mb-3 text-gray-800">ðŸ“… HistÃ³rico ({data.aulas.length} aulas)</h3>
+                <h3 className="font-bold mb-3 text-gray-800">📅 Histórico ({data.aulas.length} aulas)</h3>
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {[...data.aulas].reverse().map((aula) => {
                     const p = Object.values(aula.registros || {}).filter((r) => r.frequencia).length;
@@ -477,7 +477,7 @@ export default function App() {
                           <span className="text-gray-400 text-xs ml-2">{p} presentes</span>
                         </div>
                         <button onClick={() => { if (!confirm("Excluir?")) return; setData((d) => ({ ...d, aulas: d.aulas.filter((a) => a.id !== aula.id) })); }}
-                          className="text-red-400 hover:text-red-600 text-xs">âœ•</button>
+                          className="text-red-400 hover:text-red-600 text-xs">✕</button>
                       </div>
                     );
                   })}
@@ -491,8 +491,8 @@ export default function App() {
         {modo === "aula" && (
           <div className="space-y-3">
             <div className="flex items-center gap-3 mb-2">
-              <button onClick={() => setModo("professor")} className="text-gray-500 hover:text-gray-800 text-sm">â† Voltar</button>
-              <h2 className="font-bold text-gray-800">ðŸ“‹ Nova Aula</h2>
+              <button onClick={() => setModo("professor")} className="text-gray-500 hover:text-gray-800 text-sm">← Voltar</button>
+              <h2 className="font-bold text-gray-800">📋 Nova Aula</h2>
             </div>
             <div className="bg-white rounded-xl px-4 py-3 shadow border border-red-100 flex items-center gap-3 flex-wrap">
               <span className="text-gray-500 text-sm">Data:</span>
@@ -502,12 +502,12 @@ export default function App() {
                 onClick={imprimirFichaAvaliacao}
                 className="ml-auto inline-flex items-center gap-1 text-white text-xs font-bold px-3 py-2 rounded-lg shadow"
                 style={{ background: "#CC2200" }}>
-                ðŸ–¨ï¸ Ficha de AvaliaÃ§Ã£o
+                🖨️ Ficha de Avaliação
               </button>
             </div>
-            {/* Busca rÃ¡pida na aula */}
+            {/* Busca rápida na aula */}
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">ðŸ”</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔍</span>
               <input
                 value={buscaAula}
                 onChange={(e) => setBuscaAula(e.target.value)}
@@ -515,7 +515,7 @@ export default function App() {
                 className="w-full bg-white rounded-xl pl-8 pr-3 py-2 text-sm border border-gray-200 outline-none focus:border-red-400 shadow"
               />
               {buscaAula && (
-                <button onClick={() => setBuscaAula("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500 text-xs">âœ•</button>
+                <button onClick={() => setBuscaAula("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500 text-xs">✕</button>
               )}
             </div>
             {data.alunos
@@ -535,25 +535,25 @@ export default function App() {
                   </div>
                   <div className="grid grid-cols-2 gap-2 mb-3">
                     {[
-                      { key: "frequencia", label: "âœ… FrequÃªncia" },
-                      { key: "pontualidade", label: "â° Pontualidade" },
-                      { key: "organizacao", label: "ðŸŽ’ OrganizaÃ§Ã£o" },
-                      { key: "comportamento", label: "ðŸ˜Š Comportamento" },
-                      { key: "treinoConcluido", label: "ðŸ Treino ConcluÃ­do" },
+                      { key: "frequencia", label: "✅ Frequência" },
+                      { key: "pontualidade", label: "⏰ Pontualidade" },
+                      { key: "organizacao", label: "🎒 Organização" },
+                      { key: "comportamento", label: "😊 Comportamento" },
+                      { key: "treinoConcluido", label: "🏁 Treino Concluído" },
                     ].map(({ key, label }) => (
                       <Toggle key={key} checked={!!r[key]} label={label}
                         onChange={(v) => setRegistrosTemp((prev) => ({ ...prev, [aluno.id]: { ...prev[aluno.id], [key]: v } }))} />
                     ))}
                   </div>
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-gray-500 text-sm">ðŸŠ Metragem:</span>
+                    <span className="text-gray-500 text-sm">🏊 Metragem:</span>
                     <input type="number" min="0" step="25" value={r.metragem || ""}
                       onChange={(e) => setRegistrosTemp((prev) => ({ ...prev, [aluno.id]: { ...prev[aluno.id], metragem: parseInt(e.target.value) || 0 } }))}
                       placeholder="0" className="w-20 bg-gray-50 text-gray-800 rounded-lg px-2 py-1 text-sm border border-gray-300 outline-none" />
                     <span className="text-gray-500 text-sm">m</span>
                   </div>
                   <div>
-                    <p className="text-gray-400 text-xs mb-2">â± Registrar tempo (opcional)</p>
+                    <p className="text-gray-400 text-xs mb-2">⏱ Registrar tempo (opcional)</p>
                     <div className="flex gap-2 mb-2">
                       {[25, 50, 100].map((dist) => (
                         <button key={dist}
@@ -580,12 +580,12 @@ export default function App() {
             <button onClick={salvarAula}
               className="w-full text-white font-bold py-3 rounded-2xl transition-colors shadow mt-2"
               style={{ background: "#CC2200" }}>
-              ðŸ’¾ Salvar Aula
+              💾 Salvar Aula
             </button>
           </div>
         )}
 
-        {/* RANKING PÃšBLICO */}
+        {/* RANKING PÚBLICO */}
         {modo === "ranking" && (
           <div className={`space-y-3 transition-all duration-500 ${animIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
 
@@ -594,22 +594,22 @@ export default function App() {
               <p className="text-white text-sm font-medium italic">{frase}</p>
             </div>
 
-            {/* TÃ­tulo */}
+            {/* Título */}
             <div className="text-center py-3 bg-white rounded-2xl shadow border border-red-100">
               <div className="flex justify-center mb-1">
                 <EscudoSirio size={28} />
               </div>
               <div className="text-xs uppercase tracking-widest font-bold mb-0.5" style={{ color: "#CC2200" }}>
-                {data.turma === "AP2" ? "AperfeiÃ§oamento 2" : "AperfeiÃ§oamento 3"}
+                {data.turma === "AP2" ? "Aperfeiçoamento 2" : "Aperfeiçoamento 3"}
               </div>
-              <div className="text-gray-800 text-xl font-extrabold">ðŸ† Ranking da Turma</div>
+              <div className="text-gray-800 text-xl font-extrabold">🏆 Ranking da Turma</div>
               <div className="text-gray-400 text-xs mt-0.5 mb-3">{data.aulas.length} aulas registradas</div>
               {ranking.length > 0 && (
                 <button
                   onClick={(e) => { e.stopPropagation(); imprimirRanking(); }}
                   className="inline-flex items-center gap-2 text-white text-sm font-bold px-4 py-2 rounded-xl shadow transition-colors"
                   style={{ background: "#CC2200" }}>
-                  ðŸ–¨ï¸ Imprimir Ranking
+                  🖨️ Imprimir Ranking
                 </button>
               )}
             </div>
@@ -618,7 +618,7 @@ export default function App() {
               <div className="text-center py-16 bg-white rounded-2xl shadow">
                 <div className="flex justify-center mb-3"><EscudoSirio size={48} /></div>
                 <p className="text-gray-500">Nenhum aluno cadastrado ainda.</p>
-                <p className="text-gray-300 text-sm mt-1">Acesse como professor para comeÃ§ar.</p>
+                <p className="text-gray-300 text-sm mt-1">Acesse como professor para começar.</p>
               </div>
             )}
 
@@ -647,9 +647,9 @@ export default function App() {
 
                   <div className="p-4">
                     <div className="flex items-center gap-3">
-                      {/* PosiÃ§Ã£o */}
+                      {/* Posição */}
                       <div className={`w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-br ${medal.color} shadow flex-shrink-0`}>
-                        {medal.icon.includes("Âº")
+                        {medal.icon.includes("º")
                           ? <span className="text-white font-black text-sm">{medal.icon}</span>
                           : <span className="text-xl">{medal.icon}</span>}
                       </div>
@@ -657,10 +657,10 @@ export default function App() {
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-gray-800 font-bold">{aluno.nome}</span>
                           {aluno.streak >= 3 && (
-                            <span className="text-xs bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded-full font-semibold">ðŸ”¥ {aluno.streak}</span>
+                            <span className="text-xs bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded-full font-semibold">🔥 {aluno.streak}</span>
                           )}
                           {aluno.newRecord && (
-                            <span className="text-xs bg-purple-100 text-purple-600 px-1.5 py-0.5 rounded-full font-semibold">âš¡ Recorde!</span>
+                            <span className="text-xs bg-purple-100 text-purple-600 px-1.5 py-0.5 rounded-full font-semibold">⚡ Recorde!</span>
                           )}
                         </div>
                         <div className="mt-1.5 mb-0.5">
@@ -674,7 +674,7 @@ export default function App() {
                           </div>
                         </div>
                       </div>
-                      <div className="text-gray-300 text-xs">{isOpen ? "â–²" : "â–¼"}</div>
+                      <div className="text-gray-300 text-xs">{isOpen ? "▲" : "▼"}</div>
                     </div>
 
                     {badges.length > 0 && (
@@ -691,14 +691,14 @@ export default function App() {
 
                         {/* Estrelas */}
                         <div>
-                          <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">â­ Ãšltima aula</p>
+                          <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">⭐ Última aula</p>
                           <div className="grid grid-cols-2 gap-2">
                             {[
-                              { key: "frequencia", label: "FrequÃªncia" },
+                              { key: "frequencia", label: "Frequência" },
                               { key: "pontualidade", label: "Pontualidade" },
-                              { key: "organizacao", label: "OrganizaÃ§Ã£o" },
+                              { key: "organizacao", label: "Organização" },
                               { key: "comportamento", label: "Comportamento" },
-                              { key: "treinoConcluido", label: "Treino ConcluÃ­do" },
+                              { key: "treinoConcluido", label: "Treino Concluído" },
                             ].map(({ key, label }) => (
                               <div key={key} className="bg-gray-50 rounded-xl p-2.5 border border-gray-100">
                                 <div className="text-gray-500 text-xs mb-1">{label}</div>
@@ -710,7 +710,7 @@ export default function App() {
 
                         {/* Melhores tempos */}
                         <div>
-                          <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">â± Melhores tempos</p>
+                          <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">⏱ Melhores tempos</p>
                           <div className="grid grid-cols-3 gap-2">
                             {[25, 50, 100].map((dist) => (
                               <div key={dist} className="bg-gray-50 rounded-xl p-2.5 text-center border border-gray-100">
@@ -724,23 +724,23 @@ export default function App() {
                         {/* Stats */}
                         <div className="grid grid-cols-3 gap-2">
                           <div className="bg-gray-50 rounded-xl p-2.5 text-center border border-gray-100">
-                            <div className="text-gray-400 text-xs">PresenÃ§as</div>
+                            <div className="text-gray-400 text-xs">Presenças</div>
                             <div className="text-gray-800 font-bold text-sm mt-0.5">{aluno.presencas}/{data.aulas.length}</div>
                           </div>
                           <div className="bg-gray-50 rounded-xl p-2.5 text-center border border-gray-100">
-                            <div className="text-gray-400 text-xs">SequÃªncia</div>
-                            <div className="text-orange-500 font-bold text-sm mt-0.5">ðŸ”¥ {aluno.streak}</div>
+                            <div className="text-gray-400 text-xs">Sequência</div>
+                            <div className="text-orange-500 font-bold text-sm mt-0.5">🔥 {aluno.streak}</div>
                           </div>
                           <div className="bg-gray-50 rounded-xl p-2.5 text-center border border-gray-100">
                             <div className="text-gray-400 text-xs">Melhor seq.</div>
-                            <div className="text-amber-500 font-bold text-sm mt-0.5">â­ {aluno.maxStreak}</div>
+                            <div className="text-amber-500 font-bold text-sm mt-0.5">⭐ {aluno.maxStreak}</div>
                           </div>
                         </div>
 
-                        {/* GrÃ¡fico */}
+                        {/* Gráfico */}
                         {aluno.evolucao.length > 1 && (
                           <div>
-                            <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">ðŸ“ˆ EvoluÃ§Ã£o de pontos</p>
+                            <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">📈 Evolução de pontos</p>
                             <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
                               <ResponsiveContainer width="100%" height={90}>
                                 <LineChart data={aluno.evolucao}>
@@ -762,7 +762,7 @@ export default function App() {
                         {/* Conquistas desbloqueadas */}
                         {badges.length > 0 && (
                           <div>
-                            <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">ðŸŽ– Conquistas desbloqueadas</p>
+                            <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">🎖 Conquistas desbloqueadas</p>
                             <div className="space-y-1.5">
                               {badges.map((b) => (
                                 <div key={b.id} className="flex items-center gap-3 bg-red-50 rounded-xl px-3 py-2.5 border border-red-100">
@@ -780,7 +780,7 @@ export default function App() {
                         {/* Conquistas bloqueadas */}
                         {BADGES_DEF.filter((b) => !b.check(aluno)).length > 0 && (
                           <div>
-                            <p className="text-gray-300 text-xs uppercase tracking-wider mb-2">ðŸ”’ Ainda por conquistar</p>
+                            <p className="text-gray-300 text-xs uppercase tracking-wider mb-2">🔒 Ainda por conquistar</p>
                             <div className="flex gap-2 flex-wrap">
                               {BADGES_DEF.filter((b) => !b.check(aluno)).map((b) => (
                                 <span key={b.id} title={`${b.label}: ${b.desc}`} className="text-2xl opacity-20 grayscale">{b.icon}</span>
@@ -798,7 +798,7 @@ export default function App() {
             {/* Footer */}
             <div className="text-center py-3 flex items-center justify-center gap-2">
               <EscudoSirio size={16} />
-              <span className="text-gray-300 text-xs">Esporte Clube SÃ­rio Â· NataÃ§Ã£o</span>
+              <span className="text-gray-300 text-xs">Esporte Clube Sírio · Natação</span>
             </div>
           </div>
         )}
@@ -806,3 +806,4 @@ export default function App() {
     </div>
   );
 }
+
