@@ -294,19 +294,67 @@ export default function App() {
   }
 
   function imprimirFichaAvaliacao() {
-    const turmaLabel = data.turma === "AP2" ? "Aperfeiçoamento 2" : "Aperfeiçoamento 3";
-    const alunosOrdenados = [...data.alunos].sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
-    const linhas = alunosOrdenados.map((aluno) => `
-        <tr>
-          <td style="padding:8px 6px;font-weight:700;color:#1f2937;font-size:13px;border-bottom:1px solid #e5e7eb;white-space:nowrap;">${aluno.nome}</td>
-          <td style="padding:8px 6px;text-align:center;border-bottom:1px solid #e5e7eb;"><span style="display:inline-block;width:16px;height:16px;border:2px solid #9ca3af;border-radius:3px;"></span></td>
-          <td style="padding:8px 6px;text-align:center;border-bottom:1px solid #e5e7eb;"><span style="display:inline-block;width:16px;height:16px;border:2px solid #9ca3af;border-radius:3px;"></span></td>
-          <td style="padding:8px 6px;text-align:center;border-bottom:1px solid #e5e7eb;"><span style="display:inline-block;width:16px;height:16px;border:2px solid #9ca3af;border-radius:3px;"></span></td>
-          <td style="padding:8px 6px;text-align:center;border-bottom:1px solid #e5e7eb;"><span style="display:inline-block;width:16px;height:16px;border:2px solid #9ca3af;border-radius:3px;"></span></td>
-          <td style="padding:8px 6px;text-align:center;border-bottom:1px solid #e5e7eb;"><span style="display:inline-block;width:16px;height:16px;border:2px solid #9ca3af;border-radius:3px;"></span></td>
-          <td style="padding:8px 6px;text-align:center;border-bottom:1px solid #e5e7eb;color:#9ca3af;font-size:11px;">____ m</td>
-          <td style="padding:8px 6px;text-align:center;border-bottom:1px solid #e5e7eb;color:#9ca3af;font-size:11px;">25:___ 50:___ 100:___</td>
-        </tr>`).join("");
+    const criterios = [
+      { icon: "✅", label: "Frequência" },
+      { icon: "⏰", label: "Pontualidade" },
+      { icon: "🎒", label: "Organização" },
+      { icon: "😊", label: "Comportamento" },
+      { icon: "🏁", label: "Treino Concluído" },
+    ];
+
+    const totalFichas = Math.max(data.alunos.length, 1);
+
+    const fichaHTML = () => `
+      <div style="page-break-after:always;padding:24px;">
+        <div style="text-align:center;margin-bottom:20px;padding-bottom:14px;border-bottom:3px solid #CC2200;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#CC2200;font-weight:700;">Esporte Clube Sírio</div>
+          <div style="font-size:20px;font-weight:900;margin:4px 0;">📋 Ficha de Avaliação Individual</div>
+          <div style="font-size:12px;color:#6b7280;">Aperfeiçoamento</div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <span style="font-size:13px;color:#6b7280;">Nome do aluno:</span>
+          <div style="border-bottom:1px solid #9ca3af;height:28px;"></div>
+        </div>
+        <div style="margin-bottom:20px;">
+          <span style="font-size:13px;color:#6b7280;">Data:</span>
+          <div style="display:inline-block;border-bottom:1px solid #9ca3af;width:160px;height:24px;margin-left:8px;"></div>
+        </div>
+
+        <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+          <tbody>
+            ${criterios.map((c) => `
+            <tr>
+              <td style="padding:10px 4px;border-bottom:1px solid #e5e7eb;">
+                <span style="display:inline-block;width:20px;height:20px;border:2px solid #9ca3af;border-radius:4px;vertical-align:middle;"></span>
+                <span style="font-size:14px;margin-left:10px;vertical-align:middle;">${c.icon} ${c.label}</span>
+              </td>
+            </tr>`).join("")}
+          </tbody>
+        </table>
+
+        <div style="display:flex;gap:24px;margin-bottom:20px;">
+          <div style="flex:1;">
+            <span style="font-size:13px;color:#6b7280;">Metragem:</span>
+            <div style="border-bottom:1px solid #9ca3af;height:26px;"></div>
+          </div>
+          <div style="flex:1;">
+            <span style="font-size:13px;color:#6b7280;">Tempos (25m / 50m / 100m):</span>
+            <div style="border-bottom:1px solid #9ca3af;height:26px;"></div>
+          </div>
+        </div>
+
+        <div>
+          <span style="font-size:13px;color:#6b7280;">Observações / análise do professor:</span>
+          <div style="border-bottom:1px solid #9ca3af;height:32px;margin-top:14px;"></div>
+          <div style="border-bottom:1px solid #9ca3af;height:32px;margin-top:14px;"></div>
+          <div style="border-bottom:1px solid #9ca3af;height:32px;margin-top:14px;"></div>
+        </div>
+
+        <div style="margin-top:20px;font-size:10px;color:#9ca3af;">Cada critério marcado = 2 pontos. Preencher no app depois da aula.</div>
+      </div>`;
+
+    const fichas = Array.from({ length: totalFichas }, fichaHTML).join("");
 
     const html = `
       <!DOCTYPE html>
@@ -316,33 +364,13 @@ export default function App() {
         <title>Ficha de Avaliação - EC Sírio</title>
         <style>
           * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: Arial, sans-serif; padding: 20px; color: #1f2937; }
-          @media print { body { padding: 8px; } .no-print { display: none; } table { page-break-inside: auto; } tr { page-break-inside: avoid; } }
+          body { font-family: Arial, sans-serif; color: #1f2937; }
+          @media print { .no-print { display: none; } }
         </style>
       </head>
       <body>
-        <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #CC2200;">
-          <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#CC2200;font-weight:700;">Esporte Clube Sírio</div>
-          <div style="font-size:20px;font-weight:900;margin:4px 0;">📋 Ficha de Avaliação — ${turmaLabel}</div>
-          <div style="font-size:12px;color:#9ca3af;">Data: ______ / ______ / __________</div>
-        </div>
-        <table style="width:100%;border-collapse:collapse;">
-          <thead>
-            <tr style="background:#CC2200;color:white;">
-              <th style="padding:8px 6px;text-align:left;font-size:11px;">Aluno</th>
-              <th style="padding:8px 6px;text-align:center;font-size:10px;">✅<br/>Frequência</th>
-              <th style="padding:8px 6px;text-align:center;font-size:10px;">⏰<br/>Pontualidade</th>
-              <th style="padding:8px 6px;text-align:center;font-size:10px;">🎒<br/>Organização</th>
-              <th style="padding:8px 6px;text-align:center;font-size:10px;">😊<br/>Comportamento</th>
-              <th style="padding:8px 6px;text-align:center;font-size:10px;">🏁<br/>Treino Concl.</th>
-              <th style="padding:8px 6px;text-align:center;font-size:10px;">Metragem</th>
-              <th style="padding:8px 6px;text-align:center;font-size:10px;">Tempos (seg)</th>
-            </tr>
-          </thead>
-          <tbody>${linhas}</tbody>
-        </table>
-        <div style="margin-top:16px;font-size:11px;color:#9ca3af;">Cada critério marcado = 2 pontos. Preencher no app depois da aula.</div>
-        <div class="no-print" style="margin-top:24px;text-align:center;">
+        ${fichas}
+        <div class="no-print" style="padding:24px;text-align:center;">
           <button onclick="window.print()" style="background:#CC2200;color:white;border:none;padding:12px 32px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;">🖨️ Imprimir</button>
         </div>
       </body>
