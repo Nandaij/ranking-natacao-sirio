@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import logoSirio from "./logo-sirio.png";
-import { subscribeToData, saveData } from "./dataStore";
+import { subscribeToData, saveData, defaultMetas } from "./dataStore";
 
 const LOGO_SIRIO = logoSirio;
 
@@ -149,7 +149,8 @@ export default function App() {
         return;
       }
       isRemoteUpdate.current = true;
-      setData(remoteData || defaultState);
+      const dadosRecebidos = remoteData || defaultState;
+      setData({ ...dadosRecebidos, metas: dadosRecebidos.metas || defaultMetas });
       setLoading(false);
       setTimeout(() => setAnimIn(true), 100);
     });
@@ -168,6 +169,16 @@ export default function App() {
   }, [data]);
 
   function showToast(msg) { setToast(msg); setTimeout(() => setToast(null), 2800); }
+
+  function updateMeta(nivel, distancia, valor) {
+    setData((d) => ({
+      ...d,
+      metas: {
+        ...d.metas,
+        [nivel]: { ...(d.metas?.[nivel] || {}), [distancia]: valor },
+      },
+    }));
+  }
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: "#CC2200" }}>
@@ -305,56 +316,86 @@ export default function App() {
     const totalFichas = Math.max(data.alunos.length, 1);
 
     const fichaHTML = () => `
-      <div style="page-break-after:always;padding:24px;">
-        <div style="text-align:center;margin-bottom:20px;padding-bottom:14px;border-bottom:3px solid #CC2200;">
-          <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#CC2200;font-weight:700;">Esporte Clube Sírio</div>
-          <div style="font-size:20px;font-weight:900;margin:4px 0;">📋 Ficha de Avaliação Individual</div>
-          <div style="font-size:12px;color:#6b7280;">Aperfeiçoamento</div>
+      <div style="flex:1;padding:14px;">
+        <div style="text-align:center;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #CC2200;">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#CC2200;font-weight:700;">Esporte Clube Sírio</div>
+          <div style="font-size:15px;font-weight:900;margin:2px 0;">📋 Ficha de Avaliação Individual</div>
+          <div style="font-size:10px;color:#6b7280;">Aperfeiçoamento</div>
         </div>
 
-        <div style="margin-bottom:10px;">
-          <span style="font-size:13px;color:#6b7280;">Nome do aluno:</span>
-          <div style="border-bottom:1px solid #9ca3af;height:28px;"></div>
-        </div>
-        <div style="margin-bottom:20px;">
-          <span style="font-size:13px;color:#6b7280;">Data:</span>
-          <div style="display:inline-block;border-bottom:1px solid #9ca3af;width:160px;height:24px;margin-left:8px;"></div>
+        <div style="display:flex;gap:12px;margin-bottom:10px;">
+          <div style="flex:2;">
+            <span style="font-size:11px;color:#6b7280;">Nome do aluno:</span>
+            <div style="border-bottom:1px solid #9ca3af;height:20px;"></div>
+          </div>
+          <div style="flex:1;">
+            <span style="font-size:11px;color:#6b7280;">Data:</span>
+            <div style="border-bottom:1px solid #9ca3af;height:20px;"></div>
+          </div>
         </div>
 
-        <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+        <table style="width:100%;border-collapse:collapse;margin-bottom:10px;">
+          <thead>
+            <tr style="background:#CC2200;color:white;">
+              <th style="padding:4px;text-align:left;font-size:10px;">Critério</th>
+              <th style="padding:4px;text-align:center;font-size:9px;">1ª Sem.</th>
+              <th style="padding:4px;text-align:center;font-size:9px;">2ª Sem.</th>
+              <th style="padding:4px;text-align:center;font-size:9px;">3ª Sem.</th>
+            </tr>
+          </thead>
           <tbody>
             ${criterios.map((c) => `
             <tr>
-              <td style="padding:10px 4px;border-bottom:1px solid #e5e7eb;">
-                <span style="display:inline-block;width:20px;height:20px;border:2px solid #9ca3af;border-radius:4px;vertical-align:middle;"></span>
-                <span style="font-size:14px;margin-left:10px;vertical-align:middle;">${c.icon} ${c.label}</span>
-              </td>
+              <td style="padding:4px;border-bottom:1px solid #e5e7eb;font-size:11px;">${c.icon} ${c.label}</td>
+              <td style="padding:4px;text-align:center;border-bottom:1px solid #e5e7eb;"><span style="display:inline-block;width:13px;height:13px;border:1.5px solid #9ca3af;border-radius:3px;"></span></td>
+              <td style="padding:4px;text-align:center;border-bottom:1px solid #e5e7eb;"><span style="display:inline-block;width:13px;height:13px;border:1.5px solid #9ca3af;border-radius:3px;"></span></td>
+              <td style="padding:4px;text-align:center;border-bottom:1px solid #e5e7eb;"><span style="display:inline-block;width:13px;height:13px;border:1.5px solid #9ca3af;border-radius:3px;"></span></td>
             </tr>`).join("")}
           </tbody>
         </table>
 
-        <div style="display:flex;gap:24px;margin-bottom:20px;">
-          <div style="flex:1;">
-            <span style="font-size:13px;color:#6b7280;">Metragem:</span>
-            <div style="border-bottom:1px solid #9ca3af;height:26px;"></div>
-          </div>
-          <div style="flex:1;">
-            <span style="font-size:13px;color:#6b7280;">Tempos (25m / 50m / 100m):</span>
-            <div style="border-bottom:1px solid #9ca3af;height:26px;"></div>
-          </div>
+        <div style="margin-bottom:10px;">
+          <span style="font-size:11px;color:#6b7280;font-weight:700;">Tempos registrados:</span>
+          <table style="width:100%;border-collapse:collapse;margin-top:4px;">
+            <tbody>
+              <tr>
+                <td style="padding:3px 4px;font-size:11px;width:50px;border-bottom:1px solid #e5e7eb;">25m</td>
+                <td style="padding:3px 4px;border-bottom:1px solid #9ca3af;"></td>
+              </tr>
+              <tr>
+                <td style="padding:3px 4px;font-size:11px;width:50px;border-bottom:1px solid #e5e7eb;">50m</td>
+                <td style="padding:3px 4px;border-bottom:1px solid #9ca3af;"></td>
+              </tr>
+              <tr>
+                <td style="padding:3px 4px;font-size:11px;width:50px;">100m</td>
+                <td style="padding:3px 4px;border-bottom:1px solid #9ca3af;"></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <div>
-          <span style="font-size:13px;color:#6b7280;">Observações / análise do professor:</span>
-          <div style="border-bottom:1px solid #9ca3af;height:32px;margin-top:14px;"></div>
-          <div style="border-bottom:1px solid #9ca3af;height:32px;margin-top:14px;"></div>
-          <div style="border-bottom:1px solid #9ca3af;height:32px;margin-top:14px;"></div>
+          <span style="font-size:11px;color:#6b7280;">Observações / análise do professor:</span>
+          <div style="border-bottom:1px solid #9ca3af;height:18px;margin-top:8px;"></div>
+          <div style="border-bottom:1px solid #9ca3af;height:18px;margin-top:8px;"></div>
         </div>
 
-        <div style="margin-top:20px;font-size:10px;color:#9ca3af;">Cada critério marcado = 2 pontos. Preencher no app depois da aula.</div>
+        <div style="margin-top:10px;font-size:8px;color:#9ca3af;">Cada critério marcado = 2 pontos. Preencher no app depois da aula.</div>
       </div>`;
 
-    const fichas = Array.from({ length: totalFichas }, fichaHTML).join("");
+    const paginas = [];
+    for (let i = 0; i < totalFichas; i += 2) {
+      const segunda = i + 1 < totalFichas ? fichaHTML() : `<div style="flex:1;padding:14px;"></div>`;
+      paginas.push(`
+        <div style="page-break-after:always;display:flex;flex-direction:column;min-height:100vh;">
+          ${fichaHTML()}
+          <div style="border-top:1px dashed #9ca3af;position:relative;margin:0 14px;">
+            <span style="position:absolute;left:-14px;top:-8px;font-size:12px;color:#9ca3af;">✂️</span>
+          </div>
+          ${segunda}
+        </div>`);
+    }
+    const fichas = paginas.join("");
 
     const html = `
       <!DOCTYPE html>
@@ -381,6 +422,7 @@ export default function App() {
     win.document.close();
     setTimeout(() => win.print(), 500);
   }
+
 
   return (
     <div className="min-h-screen font-sans" style={{ background: "#f5f5f5" }}>
@@ -485,6 +527,32 @@ export default function App() {
                 {data.alunos.length > 0 && data.alunos.filter((a) => a.nome.toLowerCase().includes(buscaAluno.toLowerCase())).length === 0 && (
                   <p className="text-gray-400 text-sm text-center py-2">Nenhum aluno encontrado</p>
                 )}
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl p-4 shadow border border-red-100">
+              <h2 className="font-bold mb-1 text-gray-800">🎯 Metas de Tempo por Nível</h2>
+              <p className="text-xs text-gray-400 mb-3">Opcional — defina o tempo alvo por distância quando decidir. Deixe em branco por enquanto.</p>
+              <div className="space-y-3">
+                {["AP1", "AP2", "AP3"].map((nivel) => (
+                  <div key={nivel} className="border border-gray-100 rounded-xl p-3 bg-gray-50">
+                    <div className="font-bold text-sm text-gray-700 mb-2">
+                      {nivel === "AP1" ? "Aperfeiçoamento 1" : nivel === "AP2" ? "Aperfeiçoamento 2" : "Aperfeiçoamento 3"}
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {["25", "50", "100"].map((dist) => (
+                        <div key={dist}>
+                          <label className="text-[10px] text-gray-400">{dist}m</label>
+                          <input
+                            value={data.metas?.[nivel]?.[dist] || ""}
+                            onChange={(e) => updateMeta(nivel, dist, e.target.value)}
+                            placeholder="mm:ss"
+                            className="w-full rounded-lg px-2 py-1.5 text-sm border border-gray-300 outline-none focus:border-red-500 bg-white"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
             <button onClick={initAula} disabled={data.alunos.length === 0}

@@ -5,7 +5,13 @@ import { db } from "./firebase";
 // Coleção "ranking-natacao", documento "estado-global".
 const DOC_REF = doc(db, "ranking-natacao", "estado-global");
 
-export const defaultState = { turma: "AP2", alunos: [], aulas: [] };
+export const defaultMetas = {
+  AP1: { "25": "", "50": "", "100": "" },
+  AP2: { "25": "", "50": "", "100": "" },
+  AP3: { "25": "", "50": "", "100": "" },
+};
+
+export const defaultState = { turma: "AP2", alunos: [], aulas: [], metas: defaultMetas };
 
 /**
  * Escuta mudanças em tempo real no documento do Firestore.
